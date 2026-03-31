@@ -163,7 +163,7 @@
       align-items: center;
       justify-content: center;
       transition: background 0.15s, transform 0.2s;
-      z-index: 2;
+      z-index: 20;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       padding: 0;
     }
@@ -798,7 +798,7 @@ document.addEventListener('keydown', e => {
       height:        '300px',
       borderRadius:  '50%',
       background:    '#CBC6BE',
-      filter:        'blur(56px)',
+      filter:        'blur(72px)',
       pointerEvents: 'none',
       zIndex:        '10',
       opacity:       '0',
@@ -817,7 +817,7 @@ document.addEventListener('keydown', e => {
         blob.style.top  = (e.clientY - r.top)  + 'px';
       });
     });
-    card.addEventListener('mouseenter', () => { blob.style.opacity = '0.55'; });
+    card.addEventListener('mouseenter', () => { blob.style.opacity = '0.28'; });
     card.addEventListener('mouseleave', () => { blob.style.opacity = '0'; });
 
     card.addEventListener('click', e => {
