@@ -169,6 +169,7 @@
     }
     .btn-plus svg { display: block; }
     .btn-plus:hover { background: var(--white); transform: scale(1.08); }
+    .card:hover .btn-plus { background: var(--white); transform: scale(1.08); }
 
     /* ‚îÄ‚îÄ Accent text ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .accent { color: var(--accent); }
@@ -783,7 +784,7 @@ document.addEventListener('keydown', e => {
 </script>
 
 <script>
-// ── Custom blob cursor on card hover (desktop only) ───────────
+// ── Custom blob cursor + card click (desktop only) ────────────
 (function () {
   if (window.matchMedia('(hover: none)').matches) return;
 
@@ -796,13 +797,13 @@ document.addEventListener('keydown', e => {
       width:         '300px',
       height:        '300px',
       borderRadius:  '50%',
-      background:    '#B8B2A8',
-      filter:        'blur(48px)',
+      background:    '#CBC6BE',
+      filter:        'blur(56px)',
       pointerEvents: 'none',
       zIndex:        '10',
       opacity:       '0',
       transform:     'translate(-50%, -50%)',
-      transition:    'opacity 0.3s ease',
+      transition:    'opacity 0.35s ease',
       mixBlendMode:  'multiply',
     });
     card.appendChild(blob);
@@ -816,8 +817,14 @@ document.addEventListener('keydown', e => {
         blob.style.top  = (e.clientY - r.top)  + 'px';
       });
     });
-    card.addEventListener('mouseenter', () => { blob.style.opacity = '1'; });
+    card.addEventListener('mouseenter', () => { blob.style.opacity = '0.55'; });
     card.addEventListener('mouseleave', () => { blob.style.opacity = '0'; });
+
+    card.addEventListener('click', e => {
+      if (!e.target.closest('.btn-plus')) {
+        card.querySelector('.btn-plus')?.click();
+      }
+    });
   });
 })();
 </script>
