@@ -789,7 +789,6 @@ document.addEventListener('keydown', e => {
 
   const TILT  = 7;
   const PERSP = 700;
-  const SCALE = 1.03;
 
   document.querySelectorAll('.card').forEach(card => {
     let raf;
@@ -806,7 +805,7 @@ document.addEventListener('keydown', e => {
     });
     card.addEventListener('mouseleave', () => {
       cancelAnimationFrame(raf);
-      card.style.transform  = 'perspective(700px) rotateX(0deg) rotateY(0deg) scale(1)';
+      card.style.transform  = 'perspective(700px) rotateX(0deg) rotateY(0deg)';
       card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
       card.style.zIndex     = '';
     });
