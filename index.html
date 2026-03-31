@@ -789,8 +789,6 @@ document.addEventListener('keydown', e => {
   if (window.matchMedia('(hover: none)').matches) return;
 
   document.querySelectorAll('.card').forEach(card => {
-    card.style.cursor = 'none';
-
     const blob = document.createElement('div');
     Object.assign(blob.style, {
       position:      'absolute',
