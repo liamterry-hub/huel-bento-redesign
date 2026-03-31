@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Huel ‚Äì Bento Card Expanded State</title>
+  <style>
+    /* ‚îÄ‚îÄ Huel custom fonts ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    @font-face {
+      font-family: 'Suisse Intl';
+      font-weight: 400;
+      font-style: normal;
+      src: url('https://uk.huel.com/_next/static/media/2d596a6f791bf7c0-s.p.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Suisse Intl';
+      font-weight: 500;
+      font-style: normal;
+      src: url('https://uk.huel.com/_next/static/media/eeedaeaf2fd9e2a5-s.p.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Suisse Intl';
+      font-weight: 600;
+      font-style: normal;
+      src: url('https://uk.huel.com/_next/static/media/6d5bf4d41e75582c-s.p.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Suisse Works';
+      font-weight: 400;
+      font-style: italic;
+      src: url('https://uk.huel.com/_next/static/media/91c7df61321e4fae-s.p.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Suisse Works';
+      font-weight: 500;
+      font-style: italic;
+      src: url('https://uk.huel.com/_next/static/media/a6542ebde78961d1-s.p.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:       #FFFFFF;
+      --card:     rgba(245, 242, 236, 0.80);
+      --card-solid: #F5F2EC;
+      --stroke:   rgba(0,0,0,0.07);
+      --accent:   #75684D;
+      --text:     #0C0C0D;
+      --muted:    #7A7570;
+      --white:    #FFFFFF;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Suisse Intl', system-ui, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 48px 24px 80px;
+    }
+
+    /* ‚îÄ‚îÄ Page label ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .design-note {
+      max-width: 1152px;
+      margin: 0 auto 24px;
+      background: var(--text);
+      color: rgba(255,255,255,0.8);
+      font-size: 12px;
+      font-weight: 400;
+      padding: 9px 16px;
+      border-radius: 99px;
+      text-align: center;
+      letter-spacing: 0.1px;
+    }
+    .design-note strong { color: #fff; }
+
+    /* ‚îÄ‚îÄ Section wrapper ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .section { max-width: 1152px; margin: 0 auto; }
+
+    /* ‚îÄ‚îÄ Section heading ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .section-heading {
+      font-family: 'Suisse Intl', system-ui, sans-serif;
+      font-size: 42px;
+      font-weight: 500;
+      letter-spacing: -0.84px;
+      line-height: 112%;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .section-heading em {
+      font-family: 'Suisse Works', Georgia, serif;
+      font-style: italic;
+      font-weight: 450;
+      letter-spacing: -0.84px;
+    }
+
+    /* ‚îÄ‚îÄ Bento layout ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .bento {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      height: 598px;
+    }
+
+    .bento-col {
+      flex: 0 0 calc((100% - 32px) / 3);
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ‚îÄ‚îÄ Card base ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 40px 24px 24px 24px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: default;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      font-family: 'Suisse Intl', system-ui, sans-serif;
+      font-weight: 450;
+    }
+
+    .card--tall {
+      flex: 0 0 calc((100% - 32px) / 3);
+      min-width: 0;
+      align-items: flex-start;
+      padding-bottom: 0;
+    }
+
+    /* Middle col: Card 2 fixed tall, Card 4 fills rest */
+    .bento-col--mid .card:first-child { height: 320px; flex-shrink: 0; }
+    .bento-col--mid .card:last-child  { flex: 1; }
+
+    /* Right col: Card 3 fills, Card 5 fixed tall */
+    .bento-col--right .card:first-child { flex: 1; }
+    .bento-col--right .card:last-child  { height: 320px; flex-shrink: 0; }
+
+    /* ‚îÄ‚îÄ Expand button ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .btn-plus {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.82);
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.2s;
+      z-index: 2;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      padding: 0;
+    }
+    .btn-plus svg { display: block; }
+    .btn-plus:hover { background: var(--white); transform: scale(1.08); }
+
+    /* ‚îÄ‚îÄ Accent text ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .accent { color: var(--accent); }
+
+    /* ‚îÄ‚îÄ Tall card ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .card--tall .card-headline {
+      font-family: 'Suisse Intl', system-ui, sans-serif;
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.64px;
+      line-height: 112%;
+      text-align: left;
+    }
+
+    .product-img-wrap {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      width: 100%;
+      min-height: 0;
+      margin-bottom: -28px;
+    }
+    .product-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      display: block;
+    }
+
+    /* ‚îÄ‚îÄ Small card headline ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .card-headline {
+      font-family: 'Suisse Intl', system-ui, sans-serif;
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -0.48px;
+      line-height: 112%;
+      margin-top: auto;
+    }
+
+    /* ‚îÄ‚îÄ Card: Macros ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .macro-pills {
+      flex: 1;
+      width: 100%;
+      max-width: 234px;
+      min-height: 0;
+      align-self: center;
+      overflow: hidden;
+    }
+    .macro-pills img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+    .pill {
+      flex: 1;
+      border: 1.5px solid var(--text);
+      border-radius: 10px;
+      padding: 10px 6px 9px;
+      text-align: center;
+    }
+    .pill--dark { background: var(--text); color: white; }
+    .pill-val {
+      display: block;
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -0.44px;
+    }
+    .pill-lbl {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .pill--dark .pill-lbl { color: rgba(255,255,255,0.55); }
+
+    /* ‚îÄ‚îÄ Card: Studies ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .studies-img-wrap {
+      flex: 1;
+      width: 100%;
+      max-width: 234px;
+      min-height: 0;
+      align-self: center;
+      overflow: hidden;
+    }
+    .studies-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+
+    /* ‚îÄ‚îÄ Card: Protein ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .powder-img-wrap {
+      flex: 1;
+      width: 100%;
+      max-width: 234px;
+      min-height: 0;
+      align-self: center;
+      overflow: hidden;
+    }
+    .powder-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+
+    /* ‚îÄ‚îÄ Card: Ingredients ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .ing-circles {
+      flex: 1;
+      width: 100%;
+      max-width: 234px;
+      min-height: 0;
+      align-self: center;
+      overflow: hidden;
+    }
+    .ing-circles img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
+
+    /* ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
+       MODAL / EXPANDED PANEL
+       ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.30);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .panel {
+      background: #FAFAF8;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 564px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(18px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow:
+        0 8px 32px rgba(75, 75, 75, 0.10),
+        0 2px 8px rgba(75, 75, 75, 0.04);
+    }
+    .overlay.open .panel {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Hero image */
+    .panel-hero {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      flex-shrink: 0;
+      background: var(--card-solid);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .panel-hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: bottom center;
+      display: block;
+      padding: 16px 32px 0;
+    }
+
+    /* Close button ‚Äî overlaid top-right of hero */
+    .btn-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #0C0C0D;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+      z-index: 10;
+    }
+    .btn-close:hover { opacity: 0.8; }
+
+    /* Title section below image */
+    .panel-head {
+      padding: 20px 24px 0;
+      flex-shrink: 0;
+    }
+    .panel-title {
+      font-family: 'Suisse Intl', system-ui, sans-serif;
+      font-size: 21px;
+      font-weight: 500;
+      letter-spacing: -0.42px;
+      line-height: 1.25;
+      color: #0C0C0D;
+    }
+
+    /* Scrollable body */
+    .panel-body {
+      padding: 18px 24px 28px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .panel-body::-webkit-scrollbar { width: 4px; }
+    .panel-body::-webkit-scrollbar-track { background: transparent; }
+    .panel-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.14); border-radius: 99px; }
+
+    .panel-body p {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ‚îÄ‚îÄ Mobile carousel nav (hidden on desktop) ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .bento-nav { display: none; }
+
+    /* ‚îÄ‚îÄ Mobile styles ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    @media (max-width: 767px) {
+
+      body { padding: 48px 0 80px; }
+
+      .section { padding: 0 24px; }
+
+      .section-heading {
+        font-size: 34px;
+        letter-spacing: -0.68px;
+      }
+      .section-heading em { letter-spacing: -0.68px; }
+
+      /* Flatten bento into a horizontal snap carousel */
+      .bento {
+        flex-direction: row;
+        height: auto;
+        gap: 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 0 24px 4px 24px;
+        scroll-padding-left: 24px;
+        scroll-padding-right: 24px;
+        margin-left: -24px;
+        margin-right: -24px;
+      }
+      .bento::-webkit-scrollbar { display: none; }
+
+      /* Dissolve columns so each card becomes its own slide */
+      .bento-col {
+        display: contents;
+      }
+
+      /* Every card becomes a scroll-snap slide */
+      .bento .card,
+      .bento-col--mid .card:last-child,
+      .bento-col--right .card:first-child {
+        flex: 0 0 237px;
+        height: 320px;
+        scroll-snap-align: start;
+        min-width: 0;
+        padding: 12px;
+      }
+
+      /* Headline reordered to top of card on mobile */
+      .card-headline {
+        font-size: 21px;
+        letter-spacing: -0.42px;
+        margin-top: 0;
+        order: -1;
+      }
+
+      /* Tall card on mobile ‚Äî same as other cards */
+      .card--tall {
+        flex: 0 0 237px;
+        height: 320px;
+        scroll-snap-align: start;
+        min-width: 0;
+        padding: 12px;
+      }
+
+      /* Last card snaps end-aligned so card 4 stays visible on the left */
+      .bento-col--right .card:last-child {
+        scroll-snap-align: end;
+      }
+      .card--tall .card-headline {
+        font-size: 21px;
+        letter-spacing: -0.42px;
+      }
+
+      /* Nav: dots left, arrows right */
+      .bento-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .bento-dots {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: rgba(12, 12, 13, 0.4);
+        border: none;
+        padding: 0; cursor: pointer;
+        transition: background 0.2s, width 0.2s, height 0.2s;
+        flex-shrink: 0;
+      }
+      .dot.dot--active {
+        width: 12px; height: 12px;
+        background: var(--text);
+      }
+      .bento-arrows { display: flex; gap: 8px; }
+      .bento-arrow {
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        border: 1.25px solid var(--text);
+        background: transparent;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.15s;
+      }
+      .bento-arrow:hover { background: rgba(12,12,13,0.06); }
+      .bento-arrow svg { display: block; }
+
+      /* Plus button ‚Äî bottom-right on mobile */
+      .btn-plus {
+        top: auto;
+        bottom: 12px;
+        width: 32px;
+        height: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+<div class="section">
+
+  <h2 class="section-heading">Why Huel <em>works</em></h2>
+
+  <div class="bento">
+
+    <!-- ‚îÄ‚îÄ Card 1: Complete Nutrition (tall) ‚îÄ‚îÄ -->
+    <div class="card card--tall">
+      <button class="btn-plus" onclick="openPanel('nutrition', event)" aria-label="Expand"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div class="card-headline">
+        <span class="accent">Complete nutrition</span><br>
+        with 26 essential vitamins and minerals
+      </div>
+      <div class="product-img-wrap">
+        <img
+          src="https://huel.imgix.net/BE_RTD_Choc_Variant_Featured.png?w=320&auto=format&trim=auto"
+          alt="Huel Black Edition RTD Chocolate"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <!-- ‚îÄ‚îÄ Column 2: Macros (tall top) + Protein (short bottom) ‚îÄ‚îÄ -->
+    <div class="bento-col bento-col--mid">
+
+      <!-- Card 2: Balanced Macros -->
+      <div class="card">
+        <button class="btn-plus" onclick="openPanel('macros', event)" aria-label="Expand"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <div class="macro-pills">
+          <img
+            src="huel-macros.png"
+            alt="Low sugar, 35g protein, Low fat"
+            loading="lazy"
+          />
+        </div>
+        <div class="card-headline">
+          <span class="accent">Balanced macros</span> with the right mix of carbs, protein, and fats
+        </div>
+      </div>
+
+      <!-- Card 4: Protein -->
+      <div class="card">
+        <button class="btn-plus" onclick="openPanel('protein', event)" aria-label="Expand"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <div class="powder-img-wrap">
+          <img
+            src="huel-powder-scoop.png"
+            alt="Up to 40g of protein per meal"
+            loading="lazy"
+          />
+        </div>
+        <div class="card-headline">
+          <span class="accent">Up to 40g of protein per meal</span> to keep you fuller for longer
+        </div>
+      </div>
+
+    </div><!-- /.bento-col--mid -->
+
+    <!-- ‚îÄ‚îÄ Column 3: Studies (short top) + Ingredients (tall bottom) ‚îÄ‚îÄ -->
+    <div class="bento-col bento-col--right">
+
+      <!-- Card 3: Peer-reviewed Studies -->
+      <div class="card">
+        <button class="btn-plus" onclick="openPanel('studies', event)" aria-label="Expand"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <div class="studies-img-wrap">
+          <img
+            src="huel-studies-avatars.png"
+            alt="Backed by 100+ peer-reviewed studies"
+            loading="lazy"
+          />
+        </div>
+        <div class="card-headline">
+          Backed by <span class="accent">100+ peer-reviewed studies</span>
+        </div>
+      </div>
+
+      <!-- Card 5: Real Ingredients -->
+      <div class="card">
+        <button class="btn-plus" onclick="openPanel('ingredients', event)" aria-label="Expand"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <div class="ing-circles">
+          <img
+            src="huel-ingredients.png"
+            alt="Real ingredients like oats, pea protein, flaxseed, coconut, and MCTs"
+            loading="lazy"
+          />
+        </div>
+        <div class="card-headline">
+          <span class="accent">Made with real ingredients</span> like oats, pea protein, flaxseed, coconut, and MCTs
+        </div>
+      </div>
+
+    </div><!-- /.bento-col--right -->
+
+  </div><!-- /.bento -->
+
+  <!-- Mobile carousel nav -->
+  <div class="bento-nav" aria-hidden="true">
+    <div class="bento-dots">
+      <button class="dot dot--active" data-index="0"></button>
+      <button class="dot" data-index="1"></button>
+      <button class="dot" data-index="2"></button>
+      <button class="dot" data-index="3"></button>
+      <button class="dot" data-index="4"></button>
+    </div>
+    <div class="bento-arrows">
+      <button class="bento-arrow bento-arrow--prev" aria-label="Previous">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.99984 15.8327L4.1665 9.99935M4.1665 9.99935L9.99984 4.16602M4.1665 9.99935H15.8332" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="bento-arrow bento-arrow--next" aria-label="Next">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.00016 15.8327L15.8335 9.99935M15.8335 9.99935L10.00016 4.16602M15.8335 9.99935H4.1668" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /.section -->
+
+
+<!-- ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
+     MODAL OVERLAY
+     ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+    <div class="panel-hero">
+      <img class="panel-hero-img" id="panel-hero-img" src="" alt="">
+      <button class="btn-close" onclick="closePanel()" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 4L4 12M4 4L12 12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="panel-head">
+      <div class="panel-title" id="panel-title"></div>
+    </div>
+    <div class="panel-body" id="panel-body"></div>
+  </div>
+</div>
+
+
+<script>
+const CARDS = {
+
+  nutrition: {
+    hero: 'https://huel.imgix.net/BE_RTD_Choc_Variant_Featured.png?w=800&auto=format&trim=auto',
+    title: '<span class="accent">Complete nutrition</span> with 26 essential vitamins and minerals',
+    body: 'Every serving delivers 100% of your recommended daily intake across all 26 essential micronutrients. No guesswork, no gaps.',
+  },
+
+  macros: {
+    hero: 'huel-macros.png',
+    title: '<span class="accent">Balanced macros</span> with the right mix of carbs, protein, and fats',
+    body: 'Per 400 kcal serving of Huel Black Edition. The 40:30:15 ratio is engineered for satiety, performance, and steady energy ‚Äî backed by clinical research.',
+  },
+
+  protein: {
+    hero: 'huel-powder-scoop.png',
+    title: '<span class="accent">Up to 40g of protein</span> per meal to keep you fuller for longer',
+    body: 'Huel delivers more protein per meal than most common whole-food sources, from a blend of pea and rice protein providing all 9 essential amino acids.',
+  },
+
+  studies: {
+    hero: 'huel-studies-avatars.png',
+    title: 'Backed by <span class="accent">100+ peer-reviewed studies</span>',
+    body: 'Our formulation is validated by independent scientific research published in leading journals including the British Journal of Nutrition, Nutrients, and more.',
+  },
+
+  ingredients: {
+    hero: 'huel-ingredients.png',
+    title: '<span class="accent">Made with real ingredients</span> like oats, pea protein, flaxseed, and coconut',
+    body: 'No fillers. No artificial nasties. Every ingredient ‚Äî oats, pea protein, flaxseed, coconut, MCTs, sunflower oil ‚Äî is chosen for a specific nutritional purpose.',
+  },
+};
+
+function openPanel(id, e) {
+  e.stopPropagation();
+  const card = CARDS[id];
+  if (!card) return;
+  const heroImg = document.getElementById('panel-hero-img');
+  heroImg.src = card.hero || '';
+  heroImg.alt = card.title.replace(/<[^>]+>/g, '');
+  document.getElementById('panel-title').innerHTML = card.title;
+  document.getElementById('panel-body').innerHTML = card.body;
+  const overlay = document.getElementById('overlay');
+  document.getElementById('panel-body').scrollTop = 0;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePanel() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closePanel();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePanel();
+});
+</script>
+
+<script>
+// ‚îÄ‚îÄ Mobile bento carousel ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+(function () {
+  const bento   = document.querySelector('.bento');
+  const dots    = document.querySelectorAll('.dot');
+  const prevBtn = document.querySelector('.bento-arrow--prev');
+  const nextBtn = document.querySelector('.bento-arrow--next');
+  let current = 0;
+
+  function getCards() { return [...bento.querySelectorAll('.card')]; }
+
+  function setActive(i) {
+    current = i;
+    dots.forEach((d, idx) => d.classList.toggle('dot--active', idx === i));
+  }
+
+  function scrollTo(i) {
+    const cards = getCards();
+    if (!cards[i]) return;
+    const card = cards[i];
+    const offset = card.offsetLeft - bento.offsetLeft;
+    bento.scrollTo({ left: offset, behavior: 'smooth' });
+    setActive(i);
+  }
+
+  prevBtn?.addEventListener('click', () => scrollTo(Math.max(0, current - 1)));
+  nextBtn?.addEventListener('click', () => scrollTo(Math.min(getCards().length - 1, current + 1)));
+  dots.forEach((d, i) => d.addEventListener('click', () => scrollTo(i)));
+
+  // Sync dots on native scroll
+  bento?.addEventListener('scroll', () => {
+    const cards = getCards();
+    const scrollLeft = bento.scrollLeft;
+    let closest = 0, minDist = Infinity;
+    cards.forEach((c, i) => {
+      const dist = Math.abs(c.offsetLeft - bento.offsetLeft - scrollLeft);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    setActive(closest);
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
